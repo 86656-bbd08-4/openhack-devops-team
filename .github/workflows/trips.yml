@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build trips folder
+    name: Build and Publish trips api
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -38,6 +38,18 @@ jobs:
     - name: Push to ACR
       run: |
         docker push openhackebmacr.azurecr.io/devopsoh/api-trips:${{ steps.vars.outputs.sha_short }}
+
+    - name: 'Deploy to Azure Container Instances'
+      uses: 'azure/aci-deploy@v1'
+      with:
+        resource-group: openhackebmrg
+        dns-name-label: openhackebmrg${{ github.run_number }}
+        image: openhackebmacr.azurecr.io/devopsoh/api-trips:${{ steps.vars.outputs.sha_short }}
+        registry-login-server: openhackebmacr.azurecr.io
+        registry-username: ${{ secrets.AZURE_CLIENT_ID }}
+        registry-password: ${{ secrets.AZURE_CLIENT_SECRET }}
+        name: openhackebmtrips
+        location: 'eastus'
 
     - uses: nashmaniac/create-issue-action@v1.1
       name: Create Issue Action
