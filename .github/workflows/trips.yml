@@ -43,17 +43,25 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: 'Deploy to Azure Container Instances'
-      uses: 'azure/aci-deploy@v1'
+    # - name: 'Deploy to Azure Container Instances'
+    #   uses: 'azure/aci-deploy@v1'
+    #   with:
+    #     resource-group: openhackebmrg
+    #     dns-name-label: openhackebmrg${{ github.run_number }}
+    #     image: openhackebmacr.azurecr.io/devopsoh/api-trips:${{ steps.vars.outputs.sha_short }}
+    #     registry-login-server: openhackebmacr.azurecr.io
+    #     registry-username: ${{ secrets.AZURE_CLIENT_ID }}
+    #     registry-password: ${{ secrets.AZURE_CLIENT_SECRET }}
+    #     name: openhackebmtrips
+    #     location: 'eastus'
+    - uses: azure/webapps-deploy@v2
       with:
-        resource-group: openhackebmrg
-        dns-name-label: openhackebmrg${{ github.run_number }}
-        image: openhackebmacr.azurecr.io/devopsoh/api-trips:${{ steps.vars.outputs.sha_short }}
-        registry-login-server: openhackebmacr.azurecr.io
-        registry-username: ${{ secrets.AZURE_CLIENT_ID }}
-        registry-password: ${{ secrets.AZURE_CLIENT_SECRET }}
-        name: openhackebmtrips
-        location: 'eastus'
+        app-name: 'openhackebmtrips'
+        images: 'openhackebmacr.azurecr.io/devopsoh/api-trips:${{ steps.vars.outputs.sha_short }}'
+    
+    - name: Azure logout
+      run: |
+        az logout
 
     - uses: nashmaniac/create-issue-action@v1.1
       name: Create Issue Action
