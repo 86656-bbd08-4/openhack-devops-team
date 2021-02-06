@@ -42,7 +42,7 @@ func NewRouter() *mux.Router {
 
 // Index - Default route handler for service base uri
 func Index(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Brent Trips Service")
+	fmt.Fprintf(w, "Trips Service")
 }
 
 // CreateHandler - Create router handler
