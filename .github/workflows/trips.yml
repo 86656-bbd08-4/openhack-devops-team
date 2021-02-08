@@ -54,10 +54,12 @@ jobs:
     #     registry-password: ${{ secrets.AZURE_CLIENT_SECRET }}
     #     name: openhackebmtrips
     #     location: 'eastus'
+
     - uses: azure/webapps-deploy@v2
       with:
         app-name: 'openhackebmtrips'
         images: 'openhackebmacr.azurecr.io/devopsoh/api-trips:${{ steps.vars.outputs.sha_short }}'
+        slot-name: 'staging'
     
     - name: Azure logout
       run: |
